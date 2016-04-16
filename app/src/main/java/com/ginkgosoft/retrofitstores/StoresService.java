@@ -19,11 +19,12 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public final class StoresService {
-    public static final String API_URL = "http://fortz.esy.es";
+    public static final String API_URL = "http://fortz.esy.es/";
 
     public static class StoreReponse {
         public final String status;
@@ -48,17 +49,17 @@ public final class StoresService {
 
     public static class StoreAdd {
 
-        String store_name;
-        int latitude;
-        int longitude;
-        String address;
-        String notes;
+        public String store_name;
+        public int latitude;
+        public int longitude;
+        public String street;
+        public String notes;
 
-        public StoreAdd(String store_name, int latitude, int longitude, String address, String notes) {
+        public StoreAdd(String store_name, int latitude, int longitude, String street, String notes) {
             this.store_name = store_name;
             this.latitude = latitude;
             this.longitude = longitude;
-            this.address = address;
+            this.street = street;
             this.notes = notes;
         }
 
@@ -75,35 +76,26 @@ public final class StoresService {
     }
 
     public interface ChinoStores {
-        @GET("/stores")
+        @GET("stores")
         Call<StoreReponse> getStores();
 
-        @POST("/store")
-        Call<StoreAdd> addStore(@Body StoreAdd storeAdd);
+        @POST("store")
+        Call<StoreAddResponse> addStore(@Body StoreAdd storeAdd);
     }
 
     public static void main(String... args) throws IOException {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        ChinoStores chinoStores = retrofit.create(ChinoStores.class);
-
-        StoreAdd storeAdd = new StoreAdd("CHINO 3", 3, 3, "calle patata", "nota 3");
-        Call<StoreAdd> call = chinoStores.addStore(storeAdd);
-        //call.execute();
-        call.enqueue(new Callback<StoreAdd>() {
-            @Override
-            public void onResponse(Call<StoreAdd> call, Response<StoreAdd> response) {
-                System.out.println(response.message());
-            }
-
-            @Override
-            public void onFailure(Call<StoreAdd> call, Throwable t) {
-                System.out.println(t.getStackTrace());
-            }
-        });
+//        call.enqueue(new Callback<StoreAdd>() {
+//            @Override
+//            public void onResponse(Call<StoreAdd> call, Response<StoreAdd> response) {
+//                System.out.println(response.message());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<StoreAdd> call, Throwable t) {
+//                System.out.println(t.getStackTrace());
+//            }
+//        });
 
 
         //chinoStores.addStore(new StoreAdd("CHINO 3", 3, 3, "calle patata", "nota 3"));
